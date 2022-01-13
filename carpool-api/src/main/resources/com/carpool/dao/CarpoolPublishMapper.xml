@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carpool.dao.CarpoolPublishMapper">
+
+
+    <!-- 查询拼车行程信息,只提供简单信息查询 -->
+    <select id="selectTrips" resultType="com.carpool.entity.CarpoolPublish"
+               parameterType="com.carpool.dto.CarpoolPublishVo" >
+        SELECT
+            p.id AS id,
+            p.mobile AS mobile,
+            p.price AS price,
+            p.start_point AS startPoint,
+            p.start_point_longitude AS startPointLongitude,
+            p.start_point_latitude AS  startPointLatitude,
+            p.destination AS destination,
+            p.by_ways AS byWays,
+            p.departure_time AS departureTime,
+            p.passenger_num AS passengerNum,
+            p.create_time AS createTime,
+            p.update_time AS updateTime,
+            p.car_brand AS carBrand,
+            p.car_color AS carColor,
+            p.car_type AS carType,
+            p.plate_number_prefix  AS plateNumberPrefix,
+            p.plate_number AS plateNumber,
+            u.nick_name AS userName,
+            u.avatar AS  avatar
+        FROM carpool_publish AS p , carpool_user AS u
+        WHERE
+        p.publish_user_id = u.id
+        AND p.data_status = 0
+        AND p.passenger_num > 0
+        <if test="status != null">
+            AND p.`status` =  #{status}
+        </if>
+        <if test="type != null">
+            AND p.type =  #{type}
+        </if>
+        <if test="userType != null">
+            AND p.user_type =  #{userType}
+        </if>
+        <if test="departureTime != null">
+            <![CDATA[ AND p.departure_time >=  #{departureTime} ]]>
+        </if>
+        <if test="startPoint != null ">
+            AND p.start_point = #{startPoint}
+        </if>
+        <if test="destination != null ">
+            AND p.destination = #{destination}
+        </if>
+        <if test="geos != null">
+            AND p.start_point_geo in
+            <foreach item="item" index="index" collection="geos"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="destinationGeos != null">
+            AND p.destination_geo in
+            <foreach item="item" index="index" collection="destinationGeos"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY p.departure_time ASC
+    </select>
+
+    <select id="statCarpoolTimes" parameterType="com.carpool.dto.CarpoolPublishVo"
+            resultType="com.carpool.dto.StatCarpoolVo">
+
+        SELECT
+            user_type AS userType,
+            COUNT(id) AS num
+        FROM
+            carpool_publish
+        WHERE
+            `status` != 2
+            AND publish_user_id = #{publishUserId}
+        GROUP BY
+            user_type
+    </select>
+
+
+
+</mapper>

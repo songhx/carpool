@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carpool.dao.CarpoolUserFormidMapper">
+
+    <!-- 移除过期的formid -->
+    <delete id="removeExpireFormId" >
+        <![CDATA[  DELETE FROM carpool_user_formid WHERE  HOUR( timediff( now(), create_time) ) >  24 * 7 ]]>
+    </delete>
+
+
+
+</mapper>
