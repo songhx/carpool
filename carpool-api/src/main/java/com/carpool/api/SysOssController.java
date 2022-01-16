@@ -47,7 +47,7 @@ public class SysOssController extends ApiBaseAction {
             throw new RRException("上传文件不能为空");
         }
         //上传文件
-        String url = OSSFactory.build().upload(file);
+        String url = "https://e-carpool.oss-cn-beijing.aliyuncs.com/banner/b1.png"; //OSSFactory.build().upload(file);
         Map<String, Object> returnMap = new HashMap<String, Object>();
         returnMap.put("url",url);
         return toResponsSuccess(returnMap)  ;

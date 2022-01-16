@@ -26,7 +26,6 @@ public class FtpUpload {
     public static List<UploadVo> upload(List<MultipartFile> fileList, String carpoolCode,String dirFolderName,Map<String, String> properties){
         List<UploadVo> uploadFileInfos  = new ArrayList<UploadVo>();
         try {
-
             logger.info("upLoad 参数 -- carpoolCode : " + carpoolCode + "--dirFolderName : " + dirFolderName);
             if(org.apache.commons.lang.StringUtils.isBlank(carpoolCode))carpoolCode="";
             if(org.apache.commons.lang.StringUtils.isBlank(dirFolderName))dirFolderName="";
@@ -44,10 +43,10 @@ public class FtpUpload {
                     //任意文件上传  当文件是符合要求的文件，则上传
                     if (checkFileType(fileName , uploadFileTypes)) {
                         if (org.apache.commons.lang.StringUtils.isNotEmpty(fileName)) {
-                            String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
-                            uploadVo.setFileType(prefix);
+                            String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+                            uploadVo.setFileType(fileType);
                             String uuid = UUID.randomUUID().toString().replace("-", ""); //获取到唯一的名称
-                            fileName = uuid + "." + prefix;  //上传服务器名
+                            fileName = uuid + "." + fileType;  //上传服务器名
                         }
                         String dirFile = remotePath+ carpoolCode +"/" + dirFolderName  +"/" ;
                         uploadVo.setFileServerPath(dirPath+carpoolCode +"/" + dirFolderName  +"/"+fileName);
@@ -57,6 +56,48 @@ public class FtpUpload {
                         } catch (IOException e) {
                             uploadVo.setReturnStatus(Integer.valueOf(1));
                             e.printStackTrace();
+                        }
+                    }
+                    uploadFileInfos.add(uploadVo);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return  uploadFileInfos;
+    }
+
+    public static List<UploadVo> uploadForExample(List<MultipartFile> fileList, String carpoolCode,String dirFolderName,Map<String, String> properties){
+        List<UploadVo> uploadFileInfos  = new ArrayList<UploadVo>();
+        try {
+            logger.info("upLoad 参数 -- carpoolCode : " + carpoolCode + "--dirFolderName : " + dirFolderName);
+            if(org.apache.commons.lang.StringUtils.isBlank(carpoolCode))carpoolCode="";
+            if(org.apache.commons.lang.StringUtils.isBlank(dirFolderName))dirFolderName="";
+            String dir = properties.get("dir");
+            String uploadFileTypes = properties.get("uploadFileType");
+            String remotePath = properties.get("remotePath");
+            String dirPath = properties.get("dirPath");
+            for (MultipartFile file : fileList) {
+                if (file != null && file.getOriginalFilename() != null &&  !"".equals(file.getOriginalFilename())) {
+                    UploadVo uploadVo = new UploadVo();
+                    String fileName = file.getOriginalFilename().trim();
+                    uploadVo.setOldName(fileName);
+                    uploadVo.setFileSize(file.getSize());
+                    logger.debug("fileName:" +fileName);
+                    //任意文件上传  当文件是符合要求的文件，则上传
+                    if (checkFileType(fileName , uploadFileTypes) && org.apache.commons.lang.StringUtils.isNotEmpty(fileName)) {
+                        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+                        uploadVo.setFileType(fileType);
+                        if (fileType.equalsIgnoreCase("jpg") ||
+                                fileType.equalsIgnoreCase("png") ||
+                                fileType.equalsIgnoreCase("jpeg") ||
+                                fileType.equalsIgnoreCase("gif")
+                        ) {
+                            uploadVo.setFileServerPath("https://e-carpool.oss-cn-beijing.aliyuncs.com/banner/b1.png");
+                        } else if (fileType.equalsIgnoreCase("mp4") ||  fileType.equalsIgnoreCase("mp3")) {
+                            uploadVo.setFileServerPath("https://e-carpool.oss-cn-beijing.aliyuncs.com/vedios/exmaple.mp4");
                         }
                     }
                     uploadFileInfos.add(uploadVo);

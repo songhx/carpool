@@ -45,10 +45,10 @@
             <![CDATA[ AND p.departure_time >=  #{departureTime} ]]>
         </if>
         <if test="startPoint != null ">
-            AND p.start_point = #{startPoint}
+            AND p.start_point LIKE CONCAT('%', #{startPoint}, '%')
         </if>
         <if test="destination != null ">
-            AND p.destination = #{destination}
+            AND p.destination LIKE CONCAT('%', #{destination}, '%')
         </if>
         <if test="geos != null">
             AND p.start_point_geo in
