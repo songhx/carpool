@@ -26,7 +26,7 @@ IDEA 工具 Maven编译项目后
 
 **Local 发布**
 
-![local-start](doc/pics/local-start.png) 
+<img src="https://github.com/songhx/carpool/blob/master/doc/pics/local-start.png" alt="local-start"  />
 
 发布即可
 
