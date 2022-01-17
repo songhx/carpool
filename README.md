@@ -10,7 +10,9 @@
 和基础支撑模块。 本来想着投入商业运营的，不过正好赶上微信平台对小程序资质审核加强的阶段，所以就搁置了。 项目整体流程没有什么大问题，界面也算比较美
 观。 由于项目是个人项目，工作之余，写的也比较匆忙并没有经过严谨的测试，所以想在此基础上二次开发使用的，还需要多测测。
 
-![playbill](https://e-carpool.oss-cn-beijing.aliyuncs.com/login_bg.png "playbill") 
+
+<img src="https://e-carpool.oss-cn-beijing.aliyuncs.com/login_bg.png" alt="playbill"  />
+
 
 ## 服务启动
 ```$xslt
